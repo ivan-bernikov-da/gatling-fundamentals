@@ -5,7 +5,7 @@ import io.gatling.http.Predef._
 
 import scala.concurrent.duration._
 
-class FixedDurationLoadSimulation extends Simulation {
+class  FixedDurationLoadSimulation extends Simulation {
 
   val httpConf = http.baseUrl("http://localhost:8080/app/")
     .header("Accept", "application/json")

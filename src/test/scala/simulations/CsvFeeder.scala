@@ -3,6 +3,8 @@ package simulations
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 
+import scala.Console.println
+
 class CsvFeeder extends Simulation {
 
   val httpConf = http.baseUrl("http://localhost:8080/app/")
@@ -11,13 +13,17 @@ class CsvFeeder extends Simulation {
   val csvFeeder = csv("data/gameCsvFile.csv").circular
 
   def getSpecificVideoGame() = {
-    repeat(10) {
+    repeat(1) {
       feed(csvFeeder)
         .exec(http("Get specific video game")
         .get("videogames/${gameId}")
         .check(jsonPath("$.name").is("${gameName}"))
         .check(status.is(200)))
         .pause(1)
+        .exec { session =>
+          println(session)
+          session
+      }
     }
   }
 

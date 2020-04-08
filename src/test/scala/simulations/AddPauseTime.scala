@@ -7,8 +7,8 @@ import scala.concurrent.duration.DurationInt
 
 class AddPauseTime extends Simulation {
 
-  val httpConf = http.baseUrl("http://localhost:8080/app/")
-    .header("Accept", "application/json")
+  val httpConf = http.baseUrl("http://localhost:8000")
+   //.header("Accept", "application/json")
 
   val scn = scenario("Video Game DB - 3 calls")
 
@@ -24,8 +24,18 @@ class AddPauseTime extends Simulation {
     .get("videogames"))
     .pause(3000.milliseconds)
 
+
+  val scn2 = scenario("Simple Http server")
+      .repeat(100) {
+        exec(http("Get")
+          .get("/")
+          .check(status is 200))
+          .exec(http("post")
+            .post("/").formParam("test", "testvalue"))
+      }
+
   setUp(
-    scn.inject(atOnceUsers(1))
+    scn2.inject(atOnceUsers(200))
   ).protocols(httpConf)
 
 }
